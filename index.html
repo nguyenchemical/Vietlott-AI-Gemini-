@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Vietlott Predictor Online</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    h1 { color: #d32f2f; }
+    .product { margin: 10px 0; padding: 10px; background: #fff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    button { background: #d32f2f; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #b71c1c; }
+    .numbers { font-size: 20px; font-weight: bold; margin-top: 10px; }
+    pre { background: #eee; padding: 10px; border-radius: 6px; }
+    .birth { margin-top: 20px; padding: 10px; background: #fff; border-radius: 6px; }
+    select { margin: 5px; padding: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Ứng dụng dự đoán Vietlott Online</h1>
+  <p>Cập nhật dữ liệu trực tiếp từ <a href="https://vietlott.vn" target="_blank">Vietlott.vn</a></p>
+
+  <div id="latest-result">
+    <h2>Kết quả kỳ quay gần nhất</h2>
+    <pre id="result-text">Đang tải dữ liệu...</pre>
+  </div>
+
+  <div id="products"></div>
+
+  <div class="birth">
+    <h2>Dự đoán số theo ngày sinh</h2>
+    <label>Ngày: <select id="day"></select></label>
+    <label>Tháng: <select id="month"></select></label>
+    <label>Năm: <select id="year"></select></label>
+    <button onclick="predictByBirthday()">Dự đoán số may mắn</button>
+    <div id="birthday-result"></div>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Mega 6/45", count: 6, max: 45 },
+      { name: "Power 6/55", count: 6, max: 55 },
+      { name: "Keno", count: 10, max: 80 },
+      { name: "Bingo 18", count: 18, max: 90 },
+      { name: "Lotto 5/35", count: 5, max: 35 },
+      { name: "Max 3D", count: 3, max: 9 },
+      { name: "Max 3D Pro", count: 4, max: 9 }
+    ];
+
+    // Hàm sinh số ngẫu nhiên
+    function generateNumbers(count, max) {
+      const numbers = new Set();
+      while (numbers.size < count) {
+        numbers.add(Math.floor(Math.random() * max) + 1);
+      }
+      return Array.from(numbers).sort((a,b) => a-b);
+    }
+
+    // Render UI sản phẩm
+    const container = document.getElementById("products");
+    products.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <h2>${p.name}</h2>
+        <button onclick="predict('${p.name}', ${p.count}, ${p.max})">Dự đoán số</button>
+        <div id="result-${p.name}"></div>
+      `;
+      container.appendChild(div);
+    });
+
+    function predict(name, count, max) {
+      const nums = generateNumbers(count, max);
+      document.getElementById("result-" + name).innerHTML =
+        `<div class="numbers">${nums.join(" - ")}</div>`;
+    }
+
+    // 🚨 Lấy dữ liệu từ Vietlott.vn qua proxy
+    async function fetchData() {
+      try {
+        const res = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://vietlott.vn"));
+        const data = await res.json();
+        const html = data.contents;
+
+        // Phân tích HTML bằng regex (demo)
+        const regex = /<div class="result-number">([\s\S]*?)<\/div>/;
+        const match = html.match(regex);
+        if (match) {
+          document.getElementById("result-text").textContent = match[1].replace(/<[^>]+>/g, '').trim();
+        } else {
+          document.getElementById("result-text").textContent = "Không tìm thấy dữ liệu.";
+        }
+      } catch (err) {
+        document.getElementById("result-text").textContent = "Lỗi kết nối: " + err;
+      }
+    }
+    setInterval(fetchData, 60000);
+    fetchData();
+
+    // 🚀 Huấn luyện AI bằng dữ liệu lịch sử Vietlott (demo)
+    async function trainAIWithHistory() {
+      // Ví dụ dữ liệu lịch sử (giả định, bạn thay bằng dữ liệu thật từ vietlott.vn)
+      const xs = tf.tensor2d([[1],[2],[3],[4],[5],[6]], [6,1]);
+      const ys = tf.tensor2d([[12],[24],[36],[48],[60],[72]], [6,1]);
+
+      const model = tf.sequential();
+      model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+      model.compile({loss: 'meanSquaredError', optimizer: 'sgd'});
+
+      await model.fit(xs, ys, {epochs: 200});
+      return model;
+    }
+
+    // 🚀 Dự đoán số theo ngày sinh
+    function setupBirthdaySelectors() {
+      const daySel = document.getElementById("day");
+      const monthSel = document.getElementById("month");
+      const yearSel = document.getElementById("year");
+
+      for (let i=1; i<=31; i++) daySel.innerHTML += `<option>${i}</option>`;
+      for (let i=1; i<=12; i++) monthSel.innerHTML += `<option>${i}</option>`;
+      for (let i=1950; i<=2026; i++) yearSel.innerHTML += `<option>${i}</option>`;
+    }
+
+    async function predictByBirthday() {
+      const day = parseInt(document.getElementById("day").value);
+      const month = parseInt(document.getElementById("month").value);
+      const year = parseInt(document.getElementById("year").value);
+
+      const model = await trainAIWithHistory();
+
+      // Dùng ngày sinh làm input cho AI
+      const input = tf.tensor2d([day + month + (year % 100)], [1,1]);
+      const output = model.predict(input);
+      const val = (await output.data())[0];
+
+      const luckyNumbers = generateNumbers(6, 45);
+      luckyNumbers[0] = Math.round(val % 45) + 1;
+
+      document.getElementById("birthday-result").innerHTML =
+        `<div class="numbers">Số may mắn: ${luckyNumbers.join(" - ")}</div>`;
+    }
+
+    setupBirthdaySelectors();
+  </script>
+</body>
+</html>
