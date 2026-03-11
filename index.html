@@ -2,13 +2,16 @@
 <html lang="vi" x-data="app()" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Vietlott AI - Dự Đoán Xổ Số</title>
     
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Vietlott AI">
+
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -17,6 +20,18 @@
     
     <style>
         [x-cloak] { display: none !important; }
+        
+        /* FIX TRÀN MÀN HÌNH CHO CÁC DÒNG IPHONE CÓ TAI THỎ/DYNAMIC ISLAND */
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            min-height: 100vh;
+            /* Đảm bảo không bị kéo nhảy màn hình trên iOS */
+            overscroll-behavior-y: contain;
+        }
+
         .ball {
             display: inline-flex; align-items: center; justify-content: center;
             width: 40px; height: 40px; border-radius: 50%; font-weight: bold;
@@ -26,6 +41,11 @@
         .power-ball { background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b); color: #000; }
         .keno-ball { background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Điều chỉnh Bottom Nav để không đè lên vạch điều hướng của iPhone */
+        nav {
+            padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300" x-init="startApp()">
@@ -44,7 +64,7 @@
         </div>
     </header>
 
-    <main class="max-w-md mx-auto pb-24 min-h-screen">
+    <main class="max-w-md mx-auto pb-32 min-h-screen">
         <div x-show="activeTab === 'home'" class="animate-in fade-in duration-300">
             <div class="flex overflow-x-auto py-4 px-4 gap-3 no-scrollbar">
                 <template x-for="game in games" :key="game.id">
@@ -77,7 +97,7 @@
                                     <div class="w-3 h-3 bg-red-600 rounded-full animate-bounce [animation-delay:-.3s]"></div>
                                     <div class="w-3 h-3 bg-red-600 rounded-full animate-bounce [animation-delay:-.5s]"></div>
                                 </div>
-                                <p class="text-[10px] font-bold text-gray-400 uppercase">Đang phân tích dữ liệu...</p>
+                                <p class="text-[10px] font-bold text-gray-400 uppercase">Đang phân tích...</p>
                             </div>
                         </template>
                         <template x-if="!loading && currentPrediction.length > 0">
@@ -147,7 +167,7 @@
         </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 px-6 py-3 flex justify-between items-center rounded-t-3xl shadow-2xl z-50">
+    <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 px-6 pt-3 flex justify-between items-center rounded-t-3xl shadow-2xl z-50">
         <div @click="activeTab = 'home'" :class="activeTab === 'home' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
             <i data-lucide="home" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">TRANG CHỦ</span>
