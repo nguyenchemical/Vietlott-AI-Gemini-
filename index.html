@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" x-data="app()" :class="{ 'dark': darkMode }">
+<html lang="vi" x-data="app()" x-init="init()" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -33,10 +33,10 @@
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
         <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white shadow-sm">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white shadow-sm border border-gray-100">
                     <img src="icon.png" alt="Logo" class="w-full h-full object-contain" onerror="this.src='https://vietlott.vn/favicon.ico'">
                 </div>
-                <h1 class="font-bold text-xl tracking-tight">VIETLOTT <span class="text-red-600">AI</span></h1>
+                <h1 class="font-bold text-xl tracking-tight uppercase italic">Vietlott <span class="text-red-600">AI</span></h1>
             </div>
             <button @click="darkMode = !darkMode" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i :data-lucide="darkMode ? 'sun' : 'moon'" class="w-6 h-6 text-yellow-500"></i>
@@ -58,14 +58,14 @@
             </div>
 
             <div class="px-4 mt-2">
-                <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 relative">
                     <h2 class="text-lg font-bold mb-4 flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <i data-lucide="wand-2" class="text-purple-500 w-5 h-5"></i>
                             Dự đoán AI: <span x-text="getCurrentGame().name" class="text-red-600"></span>
                         </div>
                         <template x-if="isJackpot">
-                            <span class="text-[10px] bg-yellow-400 text-black px-2 py-0.5 rounded-full animate-pulse font-black uppercase">Chế độ Jackpot</span>
+                            <span class="text-[10px] bg-yellow-400 text-black px-2 py-0.5 rounded-full animate-pulse font-black uppercase">Jackpot Mode</span>
                         </template>
                     </h2>
 
@@ -120,16 +120,17 @@
             </div>
             
             <div class="px-4 mt-6">
-                <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700">
+                <div class="bg-gray-100 dark:bg-gray-800/50 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div class="flex items-center gap-3">
                         <div class="relative flex h-3 w-3">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                         </div>
                         <div class="text-[11px] leading-relaxed">
-                            <p class="text-gray-400 font-bold uppercase tracking-wider">Trạng thái hệ thống</p>
-                            <p class="text-gray-600 dark:text-gray-300">
-                                Dữ liệu được cập nhật từ <span class="text-red-500 font-bold">Vietlott.vn</span> lúc <span x-text="fullUpdateDate" class="font-mono font-bold text-blue-500 dark:text-blue-400"></span>
+                            <p class="text-gray-400 font-bold uppercase tracking-widest mb-1">Trạng thái hệ thống</p>
+                            <p class="text-gray-600 dark:text-gray-200">
+                                Dữ liệu được cập nhật từ <span class="text-red-500 font-bold">Vietlott.vn</span> lúc <br>
+                                <span x-text="fullUpdateDate" class="font-mono font-bold text-blue-600 dark:text-blue-400 text-[13px]"></span>
                             </p>
                         </div>
                     </div>
@@ -140,26 +141,26 @@
         <div x-show="activeTab !== 'home'" class="p-6 text-center">
             <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
                 <h2 class="text-xl font-bold uppercase" x-text="activeTab === 'history' ? 'Lịch sử' : (activeTab === 'stats' ? 'Thống kê' : 'Cá nhân')"></h2>
-                <p class="mt-4 text-gray-500 italic">Tính năng đang được cập nhật...</p>
-                <button @click="activeTab = 'home'" class="mt-6 text-red-600 font-bold underline">Quay lại</button>
+                <p class="mt-4 text-gray-400 italic">Dữ liệu đang được đồng bộ...</p>
+                <button @click="activeTab = 'home'" class="mt-6 text-red-600 font-bold underline uppercase text-xs">Quay lại trang chủ</button>
             </div>
         </div>
     </main>
 
     <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 px-6 py-3 flex justify-between items-center rounded-t-3xl shadow-2xl z-50">
-        <div @click="activeTab = 'home'" :class="activeTab === 'home' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'home'" :class="activeTab === 'home' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="home" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">TRANG CHỦ</span>
         </div>
-        <div @click="activeTab = 'history'" :class="activeTab === 'history' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'history'" :class="activeTab === 'history' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="history" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">LỊCH SỬ</span>
         </div>
-        <div @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="trending-up" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">THỐNG KÊ</span>
         </div>
-        <div @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="user" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">CÁ NHÂN</span>
         </div>
@@ -168,9 +169,42 @@
     <script>
         function app() {
             return {
-                darkMode: true, activeTab: 'home', activeGame: 'mega645',
-                loading: false, isJackpot: false, currentPrediction: [],
-                dob: { day: 1, month: 1, year: 2000 }, fullUpdateDate: '',
+                darkMode: true,
+                activeTab: 'home',
+                activeGame: 'mega645',
+                loading: false,
+                isJackpot: false,
+                currentPrediction: [],
+                dob: { day: 1, month: 1, year: 2000 },
+                fullUpdateDate: 'Đang tải...', // Giá trị mặc định
+
+                init() {
+                    lucide.createIcons();
+                    this.updateTime(); // Cập nhật ngay khi mở app
+                    setInterval(() => {
+                        this.updateTime();
+                    }, 1000); // Chạy lại mỗi giây
+                },
+
+                updateTime() {
+                    const now = new Date();
+                    const date = now.toLocaleDateString('vi-VN', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric' 
+                    });
+                    const time = now.toLocaleTimeString('vi-VN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        second: '2-digit' 
+                    });
+                    this.fullUpdateDate = `${time} - ${date}`;
+                },
+
+                getCurrentGame() {
+                    return this.games.find(g => g.id === this.activeGame);
+                },
+
                 games: [
                     { id: 'mega645', name: 'Mega 6/45', max: 45, count: 6 },
                     { id: 'power655', name: 'Power 6/55', max: 55, count: 7 },
@@ -181,28 +215,20 @@
                     { id: 'max3dpro', name: 'Max 3D Pro', max: 999, count: 2 },
                     { id: 'lotto535', name: 'Lotto 5/35', max: 35, count: 5 }
                 ],
-                init() {
-                    lucide.createIcons();
-                    this.updateTime();
-                    setInterval(() => this.updateTime(), 1000);
-                },
-                updateTime() {
-                    const now = new Date();
-                    const date = now.toLocaleDateString('vi-VN');
-                    const time = now.toLocaleTimeString('vi-VN');
-                    this.fullUpdateDate = `${time} - ${date}`;
-                },
-                getCurrentGame() { return this.games.find(g => g.id === this.activeGame); },
+
                 getBallColor(index) {
                     if (this.activeGame === 'power655' && index === 6) return 'power-ball border-4 border-red-500';
                     if (this.activeGame === 'power655') return 'power-ball';
                     if (this.activeGame === 'mega645') return 'mega-ball';
                     return 'keno-ball';
                 },
+
                 generatePrediction(jackpotMode = false, isBirthday = false) {
-                    this.loading = true; this.currentPrediction = [];
+                    this.loading = true;
+                    this.currentPrediction = [];
                     this.isJackpot = jackpotMode;
                     const game = this.getCurrentGame();
+                    
                     setTimeout(() => {
                         let nums = new Set();
                         while(nums.size < game.count) {
@@ -215,7 +241,9 @@
                         }
                         this.currentPrediction = Array.from(nums).sort((a, b) => a - b);
                         this.loading = false;
-                        if(jackpotMode || isBirthday) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        if(jackpotMode || isBirthday) {
+                            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        }
                     }, 1000);
                 }
             }
