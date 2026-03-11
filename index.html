@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vietlott AI - Dự Đoán Xổ Số</title>
     
-    <link rel="icon" type="image/png" href="https://vietlott.vn/favicon.ico">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -30,8 +33,8 @@
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
         <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shadow-lg overflow-hidden">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden">
+                    <img src="icon.png" alt="Logo" class="w-full h-full object-cover shadow-md" onerror="this.innerHTML='<div class=\'bg-red-600 w-full h-full\'></div>'">
                 </div>
                 <h1 class="font-bold text-xl tracking-tight uppercase">Vietlott <span class="text-red-600">AI</span></h1>
             </div>
@@ -42,7 +45,6 @@
     </header>
 
     <main class="max-w-md mx-auto pb-24 min-h-screen">
-        
         <div x-show="activeTab === 'home'" class="animate-in fade-in duration-300">
             <div class="flex overflow-x-auto py-4 px-4 gap-3 no-scrollbar">
                 <template x-for="game in games" :key="game.id">
@@ -143,13 +145,13 @@
         <div x-show="activeTab !== 'home'" class="p-6">
             <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 text-center shadow-xl border border-gray-100 dark:border-gray-700">
                 <template x-if="activeTab === 'history'">
-                    <div><i data-lucide="history" class="w-12 h-12 mx-auto text-red-500 mb-4"></i><h2 class="text-xl font-bold">Lịch sử dự đoán</h2><p class="mt-2 text-sm text-gray-500">Lịch sử của bạn đang được lưu cục bộ...</p></div>
+                    <div><i data-lucide="history" class="w-12 h-12 mx-auto text-red-500 mb-4"></i><h2 class="text-xl font-bold">Lịch sử dự đoán</h2><p class="mt-2 text-sm text-gray-500">Dữ liệu được lưu cục bộ.</p></div>
                 </template>
                 <template x-if="activeTab === 'stats'">
                     <div><i data-lucide="trending-up" class="w-12 h-12 mx-auto text-green-500 mb-4"></i><h2 class="text-xl font-bold">Thống kê Vietlott</h2><p class="mt-2 text-sm text-gray-500">Đang đồng bộ dữ liệu kỳ quay...</p></div>
                 </template>
                 <template x-if="activeTab === 'profile'">
-                    <div><i data-lucide="user" class="w-12 h-12 mx-auto text-blue-500 mb-4"></i><h2 class="text-xl font-bold">Hồ sơ cá nhân</h2><p class="mt-2 text-sm text-gray-500">Phiên bản: 3.0.0 (Pro)</p></div>
+                    <div><i data-lucide="user" class="w-12 h-12 mx-auto text-blue-500 mb-4"></i><h2 class="text-xl font-bold">Hồ sơ cá nhân</h2><p class="mt-2 text-sm text-gray-500">Phiên bản 3.0.0 Pro</p></div>
                 </template>
                 <button @click="activeTab = 'home'" class="mt-6 text-red-600 font-bold uppercase text-xs tracking-widest">Quay lại</button>
             </div>
@@ -157,19 +159,19 @@
     </main>
 
     <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 px-6 py-3 flex justify-between items-center rounded-t-3xl shadow-2xl z-50">
-        <div @click="activeTab = 'home'" :class="activeTab === 'home' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'home'" :class="activeTab === 'home' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="home" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">Trang chủ</span>
         </div>
-        <div @click="activeTab = 'history'" :class="activeTab === 'history' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'history'" :class="activeTab === 'history' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="history" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">Lịch sử</span>
         </div>
-        <div @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="trending-up" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">Thống kê</span>
         </div>
-        <div @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer transition-all">
+        <div @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'text-red-600' : 'text-gray-400'" class="flex flex-col items-center cursor-pointer">
             <i data-lucide="user" class="w-6 h-6"></i>
             <span class="text-[10px] mt-1 font-bold">Cá nhân</span>
         </div>
@@ -178,15 +180,9 @@
     <script>
         function app() {
             return {
-                darkMode: true,
-                activeTab: 'home',
-                activeGame: 'mega645',
-                loading: false,
-                isJackpot: false,
-                currentPrediction: [],
-                dob: { day: 1, month: 1, year: 2000 },
-                currentTime: '',
-                
+                darkMode: true, activeTab: 'home', activeGame: 'mega645',
+                loading: false, isJackpot: false, currentPrediction: [],
+                dob: { day: 1, month: 1, year: 2000 }, currentTime: '',
                 games: [
                     { id: 'mega645', name: 'Mega 6/45', max: 45, count: 6 },
                     { id: 'power655', name: 'Power 6/55', max: 55, count: 7 },
@@ -197,23 +193,16 @@
                     { id: 'max3dpro', name: 'Max 3D Pro', max: 999, count: 2 },
                     { id: 'lotto535', name: 'Lotto 5/35', max: 35, count: 5 }
                 ],
-
                 init() {
                     lucide.createIcons();
                     this.updateTime();
                     setInterval(() => this.updateTime(), 1000);
                 },
-
-                updateTime() {
-                    this.currentTime = new Date().toLocaleTimeString('vi-VN');
-                },
-
-                // Âm thanh Beep (Đảm bảo 100% hoạt động)
+                updateTime() { this.currentTime = new Date().toLocaleTimeString('vi-VN'); },
                 playSound(type) {
                     try {
                         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
+                        const osc = ctx.createOscillator(); const gain = ctx.createGain();
                         osc.type = type === 'click' ? 'sine' : 'triangle';
                         osc.frequency.setValueAtTime(type === 'click' ? 600 : 1000, ctx.currentTime);
                         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (type === 'click' ? 0.1 : 0.4));
@@ -221,32 +210,18 @@
                         osc.start(); osc.stop(ctx.currentTime + (type === 'click' ? 0.1 : 0.4));
                     } catch(e) {}
                 },
-
-                triggerHaptic() {
-                    if (navigator.vibrate) navigator.vibrate(35);
-                },
-
-                getCurrentGame() {
-                    return this.games.find(g => g.id === this.activeGame);
-                },
-
+                triggerHaptic() { if (navigator.vibrate) navigator.vibrate(35); },
+                getCurrentGame() { return this.games.find(g => g.id === this.activeGame); },
                 getBallColor(index) {
                     if (this.activeGame === 'power655' && index === 6) return 'power-ball border-4 border-red-500';
                     if (this.activeGame === 'power655') return 'power-ball';
                     if (this.activeGame === 'mega645') return 'mega-ball';
                     return 'keno-ball';
                 },
-
                 generatePrediction(jackpotMode = false, isBirthday = false) {
-                    this.playSound('click');
-                    this.triggerHaptic();
-                    this.isJackpot = jackpotMode;
-                    this.loading = true;
-                    this.currentPrediction = [];
-                    
+                    this.playSound('click'); this.triggerHaptic();
+                    this.isJackpot = jackpotMode; this.loading = true; this.currentPrediction = [];
                     const game = this.getCurrentGame();
-                    const delay = jackpotMode ? 2500 : 1200;
-
                     setTimeout(() => {
                         let nums = new Set();
                         if (game.id.includes('max3d')) {
@@ -259,22 +234,11 @@
                                 nums.add(n < 10 ? '0' + n : n.toString());
                             }
                         }
-                        
                         this.currentPrediction = Array.from(nums).sort((a, b) => a - b);
-                        this.loading = false;
-                        this.playSound('success');
-                        this.triggerHaptic();
-                        
-                        // Pháo hoa khi có kết quả
-                        confetti({ 
-                            particleCount: isBirthday || jackpotMode ? 150 : 80, 
-                            spread: 70, 
-                            origin: { y: 0.6 },
-                            colors: ['#EF4444', '#FBBF24', '#FFFFFF']
-                        });
-
+                        this.loading = false; this.playSound('success'); this.triggerHaptic();
+                        confetti({ particleCount: isBirthday || jackpotMode ? 150 : 80, spread: 70, origin: { y: 0.6 } });
                         this.$nextTick(() => lucide.createIcons());
-                    }, delay);
+                    }, 1200);
                 }
             }
         }
